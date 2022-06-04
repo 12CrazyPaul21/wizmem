@@ -4,7 +4,6 @@
 
 const wizmem = (function() {
 
-
     function say_hello() {
         return 'hello, wizmem';
     }
