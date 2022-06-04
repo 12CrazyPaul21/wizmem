@@ -13,4 +13,6 @@ setup(
     keywords='process memory graph',
     packages=find_packages(include=['wizmem', 'wizmem.*']),
     install_requires=open("./requirements.txt", "r", encoding="utf-8").read().splitlines(),
+    include_package_data=True,
+    zip_safe=False
 )

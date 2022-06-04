@@ -6,6 +6,19 @@
 pip install -r requirements.txt
 ```
 
+## 安装
+
+``` bash
+python setup.py install
+```
+
+## 打包为可执行二进制
+
+``` bash
+# 打包到dist/wizmem目录下，需要打包为压缩包的话，请手动打包
+build_executable
+```
+
 ## 调用方法
 
 ```python

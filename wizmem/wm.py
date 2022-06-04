@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-from .mem import *
-from .web import *
+from wizmem import web
 
 def run():
-    print('hello')
+    web.app.build(__name__).run()
