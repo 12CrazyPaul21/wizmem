@@ -38,6 +38,7 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon='wizmem\\static\\favicon.ico',
+    uac_admin=True,
 )
 coll = COLLECT(
     exe,
