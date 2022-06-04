@@ -16,6 +16,7 @@ python setup.py install
 
 ``` bash
 # 打包到dist/wizmem目录下，需要打包为压缩包的话，请手动打包
+# 另外执行之前请手动安装pyinstaller(pip install pyinstaller)
 build_executable
 ```
 
