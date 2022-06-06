@@ -13,7 +13,7 @@ def get_system_total_mem_size() -> int:
     
     return psutil.virtual_memory().total
 
-def __map_process_info(pid: int) -> dict[str, any]:
+def __map_process_info(pid: int) -> object:
     """
     encapsulate process info
 
@@ -46,12 +46,12 @@ def __map_process_info(pid: int) -> dict[str, any]:
 
     return r
 
-def get_process_info_list() -> Iterator[dict[str, any]]:
+def get_process_info_list() -> Iterator[object]:
     """
     get all process's memory info list
 
     :returns: process info list generator
-    :rtype: Iterator[dict[str, any]]
+    :rtype: Iterator[object]
     """
 
     return map(__map_process_info, psutil.pids())
