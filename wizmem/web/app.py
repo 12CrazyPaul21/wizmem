@@ -1,7 +1,7 @@
-import os
+import os, signal
 
 from flask import Flask
-from flask import render_template
+from flask import request, render_template
 
 from wizmem import mem
 
@@ -28,6 +28,13 @@ def build(app_name: str) -> Flask:
         return {
             'total_memory_size': mem.get_system_total_mem_size(),
             'process_memory_infos': list(mem.get_process_info_list())
+        }
+
+    @app.route("/shutdown")
+    def shutdown():
+        os.kill(signal.CTRL_C_EVENT, 0)
+        return {
+            'result': True
         }
 
     return app

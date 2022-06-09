@@ -2,5 +2,65 @@ body {
     color: #212529;
     background-color: #e62b60;
     text-align: center;
+}
+
+.container {
+    width: 100%;
+}
+
+.wizmem-hide {
+    display: none;
+}
+
+.wizmem-panel {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.wizmem-panel-header {
+    color: #212529;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row;
+}
+
+.wizmem-panel-header a {
+    color: rgb(238, 238, 238);
+}
+
+.panel-container {
+    border: 2px solid black;
+    border-radius: 6px;
+}
+
+#splash-screen, #shutdown-screen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#web-manager-container {
+    width: 100%;
     padding: 20px;
+}
+
+#web-manager-header {
+    margin-bottom: 8px;
+    text-align: right;
+}
+
+#web-manager-header span {
+    position: relative;
+    top: 5px;
+}
+
+#web-manager-header a {
+    color: #212529;
+}
+
+#web-manager-footer a {
+    color: black;
 }
