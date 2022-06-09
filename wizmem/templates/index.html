@@ -8,6 +8,7 @@
     <script src="static/thirdparty/jquery.min.js"></script>
     <script src="static/thirdparty/popper.min.js"></script>
     <script src="static/thirdparty/bootstrap.min.js"></script>
+    <script src="static/thirdparty/google/charts/loader.js"></script>
     <script src="static/index.js"></script>
     <title>wizmem</title>
 </head>
@@ -36,6 +37,13 @@
                 <h1>
                     <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#shutdown-dialog">关闭WizMem</button>
                 </h1>
+            </div>
+            <div class="container d-flex justify-container-center">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="process-memory-pie-chart" style="width: 900px; height: 500px;"></div>
+                    </div>
+                </div>
             </div>
             <div id="web-manager-footer">
                 <a href="https://gitee.com/phantom27/wizmem">Visit WizMem Gitee Repository</a>

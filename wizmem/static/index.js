@@ -25,6 +25,30 @@ const wizmem = (function() {
 
         update_wizmem_chart.bind(this)();
 
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                ['Work',     11],
+                ['Eat',      2],
+                ['Commute',  2],
+                ['Watch TV', 2],
+                ['Sleep',    7]
+            ]);
+
+            var options = {
+                title: 'Process Memory Info',
+                backgroundColor: 'transparent',
+                width: 800,
+                height: 400
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('process-memory-pie-chart'));
+            chart.draw(data, options);
+        }
+
         // into web manager container page
         $("#splash-screen").fadeOut(1000, () => {
             $("#splash-screen").remove();
