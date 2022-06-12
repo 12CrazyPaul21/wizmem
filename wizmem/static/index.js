@@ -4,8 +4,115 @@
 
 const wizmem = (function() {
 
-    function update_wizmem_chart() {
+    const I18n = {
+        idle_memory: "空闲内存",
+        absolute_path: "绝对路径",
+        uss_memory: "独占内存",
+        kill_process: "结束进程"
+    };
 
+    function update_wizmem_chart() {
+        var used_memory_size = 0;
+        var process_memory_infos = this.env.process_memory_infos.filter((p) => {
+            if (!('memory_info' in p)) {
+                return false;
+            }
+
+            used_memory_size += p.memory_info.uss;
+            return true;
+        }).sort((a,b) => {
+            return a.process_name.localeCompare(b.process_name)
+        });
+
+        process_memory_infos.unshift({
+            pid: 0,
+            process_name: I18n.idle_memory,
+            memory_info: {
+                'uss': used_memory_size
+            }
+        });
+
+        var process_names = process_memory_infos.map((p) => {
+            return p.process_name;
+        });
+
+        var process_usses = process_memory_infos.map((p) => {
+            return p.memory_info.uss;
+        });
+
+        var process_colors = process_memory_infos.map((p) => {
+            return uniqolor(p.absolute_path || p.process_name).color;
+        });
+
+        this.env.process_memory_pie_chart = new Chart($("#process-memory-pie-chart-canvas"), {
+            type: 'pie',
+            data: {
+                labels: process_names,
+                datasets: [{
+                    data: process_usses,
+                    backgroundColor: process_colors
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                borderColor: '#343434',
+                animation: {
+                    duration: 0
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Process Memory Info',
+                        color: 'black',
+                        font: {
+                            weight: 'bold',
+                            size: 16
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: true,
+                        position: 'nearest',
+                        callbacks: {
+                            label: function(ctx) {
+                                let process_name = ctx.label || '';
+                                let process_index = ctx.dataIndex;
+                                let process_uss = ctx.parsed;
+                                let process_info = process_memory_infos[process_index];
+
+                                if (process_index == 0) {
+                                    return I18n.idle_memory + ": " + filesize(process_uss, 2);
+                                }
+
+                                let label = process_name;
+                                let uss = I18n.uss_memory + ": " + filesize(process_uss, 2);
+                                let pid = "PID: " + process_info.pid;
+                                let absolute_path = I18n.absolute_path + ": " + process_info.absolute_path;
+
+                                return [label, pid, absolute_path, uss];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        var context_options = {
+            items: [
+                {
+                    text: I18n.kill_process,
+                    onclick: function(e) {
+                        alert('Hello ' + e.data.name);
+                    }
+                }
+            ],
+            menuId: "process-memory-pie-context-menu"
+        };
+
+        $("#process-memory-pie-chart-canvas").contextify(context_options);
     }
 
     function init_failed() {
@@ -25,30 +132,6 @@ const wizmem = (function() {
 
         update_wizmem_chart.bind(this)();
 
-        google.charts.load('current', {'packages':['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-            var data = google.visualization.arrayToDataTable([
-                ['Task', 'Hours per Day'],
-                ['Work',     11],
-                ['Eat',      2],
-                ['Commute',  2],
-                ['Watch TV', 2],
-                ['Sleep',    7]
-            ]);
-
-            var options = {
-                title: 'Process Memory Info',
-                backgroundColor: 'transparent',
-                width: 800,
-                height: 400
-            };
-
-            var chart = new google.visualization.PieChart(document.getElementById('process-memory-pie-chart'));
-            chart.draw(data, options);
-        }
-
         // into web manager container page
         $("#splash-screen").fadeOut(1000, () => {
             $("#splash-screen").remove();
@@ -66,7 +149,8 @@ const wizmem = (function() {
     return {
         env: {
             total_memory_size: 0,
-            process_memory_infos: []
+            process_memory_infos: [],
+            process_memory_pie_chart: undefined
         },
         init: function() {
             $.ajax({
