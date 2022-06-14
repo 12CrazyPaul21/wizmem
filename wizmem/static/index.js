@@ -44,6 +44,10 @@ const wizmem = (function() {
             return uniqolor(p.absolute_path || p.process_name).color;
         });
 
+        if (this.env.process_memory_pie_chart instanceof Chart) {
+            this.env.process_memory_pie_chart.destroy();
+        }
+
         this.env.process_memory_pie_chart = new Chart($("#process-memory-pie-chart-canvas"), {
             type: 'pie',
             data: {
@@ -103,9 +107,12 @@ const wizmem = (function() {
         var context_options = {
             items: [
                 {
+                    header: ''
+                },
+                {
                     text: I18n.kill_process,
-                    onclick: function(e) {
-                        alert('Hello ' + e.data.name);
+                    onclick: function() {
+                        kill_selected_process();
                     }
                 }
             ],
@@ -113,6 +120,29 @@ const wizmem = (function() {
         };
 
         $("#process-memory-pie-chart-canvas").contextify(context_options);
+
+        var contextify_handler = jQuery._data(document.getElementById("process-memory-pie-chart-canvas"), 'events').contextmenu[0].handler;
+        $("#process-memory-pie-chart-canvas").unbind('contextmenu', contextify_handler);
+
+        $("#process-memory-pie-chart-canvas").on('contextmenu', function(e) {
+            wizmem.env.selected_process_info = null;
+
+            let hitted_points = wizmem.env.process_memory_pie_chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
+            if (wizmem.env.killing_process_flag || hitted_points.length == 0 || hitted_points[0].index == 0) {
+                e.preventDefault();
+                return false;
+            }
+
+            let process_index = hitted_points[0].index;
+            let process_info = process_memory_infos[process_index];
+
+            wizmem.env.selected_process_info = process_info;
+
+            context_options.items[0].text = `[${process_info.process_name}(${process_info.pid})]`;
+            contextify_handler(e);
+
+            return true;
+        });
     }
 
     function init_failed() {
@@ -146,11 +176,56 @@ const wizmem = (function() {
         });
     }
 
+    function kill_selected_process_failed() {
+        $("#message-dialog-text").text("结束进程失败");
+        $("#message-dialog").modal('show');
+    }
+
+    function kill_selected_process() {
+        if (!wizmem.env.selected_process_info || wizmem.env.killing_process_flag) {
+            return;
+        }
+        
+        wizmem.env.killing_process_flag = true;
+
+        $.ajax({
+            type: 'post',
+            url: '/kill_processes',
+            contentType: "application/json",
+            dataType: 'json',
+            data: JSON.stringify({
+                pids: [
+                    wizmem.env.selected_process_info.pid
+                ]
+            }),
+            success: (result) => {
+                if (result['status'] != true) {
+                    kill_selected_process_failed();
+                    wizmem.env.killing_process_flag = false;
+                    return;
+                }
+
+                let refresh_mem_info = result['refresh_mem_info'];
+                wizmem.env.total_memory_size = refresh_mem_info['total_memory_size'];
+                wizmem.env.process_memory_infos = refresh_mem_info['process_memory_infos'];
+
+                update_wizmem_chart.bind(wizmem)();
+                wizmem.env.killing_process_flag = false;
+            },
+            error: () => {
+                kill_selected_process_failed();
+                wizmem.env.killing_process_flag = false;
+            }
+        });
+    }
+
     return {
         env: {
             total_memory_size: 0,
             process_memory_infos: [],
-            process_memory_pie_chart: undefined
+            process_memory_pie_chart: undefined,
+            selected_process_info: null,
+            killing_process_flag: false
         },
         init: function() {
             $.ajax({

@@ -82,3 +82,25 @@ body {
     text-align: center;
     font-size: 12px;
 }
+
+#process-memory-pie-context-menu li {
+    padding: 2px;
+}
+
+#process-memory-pie-context-menu li > a {
+    display: block;
+}
+
+#process-memory-pie-context-menu li:first-child {
+    font-weight: bold;
+    border-bottom: 2px solid whitesmoke;
+    margin-bottom: 4px;
+}
+
+#process-memory-pie-context-menu li:first-child:hover {
+    background-color: transparent;
+}
+
+#process-memory-pie-context-menu li:hover {
+    background-color: dodgerblue;
+}

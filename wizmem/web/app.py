@@ -1,4 +1,5 @@
-import os, signal
+import os, time, signal
+import psutil
 
 from flask import Flask
 from flask import request, render_template
@@ -28,6 +29,36 @@ def build(app_name: str) -> Flask:
         return {
             'total_memory_size': mem.get_system_total_mem_size(),
             'process_memory_infos': list(mem.get_process_info_list())
+        }
+
+    @app.route("/kill_processes", methods = ['POST'])
+    def kill_processes():
+        if not request.is_json:
+            return {
+                'status': False
+            }
+
+        content = request.get_json()
+        if 'pids' not in content:
+            return {
+                'status': False
+            }
+
+        for pid in content['pids']:
+            try:
+                psutil.Process(pid).kill()
+            except Exception as e:
+                print('kill {} failed'.format(pid))
+
+        # sleep a second
+        time.sleep(1.0)
+
+        return {
+            'status': True,
+            'refresh_mem_info': {
+                'total_memory_size': mem.get_system_total_mem_size(),
+                'process_memory_infos': list(mem.get_process_info_list())
+            }
         }
 
     @app.route("/shutdown")
