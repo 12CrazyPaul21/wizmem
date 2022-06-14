@@ -8,7 +8,8 @@ const wizmem = (function() {
         idle_memory: "空闲内存",
         absolute_path: "绝对路径",
         uss_memory: "独占内存",
-        kill_process: "结束进程"
+        kill_process: "结束进程",
+        kill_process_failed: "结束进程失败"
     };
 
     function update_wizmem_chart() {
@@ -177,7 +178,7 @@ const wizmem = (function() {
     }
 
     function kill_selected_process_failed() {
-        $("#message-dialog-text").text("结束进程失败");
+        $("#message-dialog-text").text(I18n.kill_process_failed);
         $("#message-dialog").modal('show');
     }
 

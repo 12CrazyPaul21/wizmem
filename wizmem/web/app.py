@@ -1,5 +1,6 @@
 import os, time, signal
 import psutil
+import logging
 
 from flask import Flask
 from flask import request, render_template
@@ -48,7 +49,7 @@ def build(app_name: str) -> Flask:
             try:
                 psutil.Process(pid).kill()
             except Exception as e:
-                print('kill {} failed'.format(pid))
+                app.logger.error('kill process(pid : {}) failed'.format(pid))
 
         # sleep a second
         time.sleep(1.0)
