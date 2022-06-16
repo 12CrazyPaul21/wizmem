@@ -1,6 +1,5 @@
 import os, time, signal
 import psutil
-import logging
 
 from flask import Flask
 from flask import request, render_template
@@ -29,6 +28,7 @@ def build(app_name: str) -> Flask:
     def response_memory_infos():
         return {
             'total_memory_size': mem.get_system_total_mem_size(),
+            'free_memory_size': mem.get_system_free_mem_size(),
             'process_memory_infos': list(mem.get_process_info_list())
         }
 
@@ -58,6 +58,7 @@ def build(app_name: str) -> Flask:
             'status': True,
             'refresh_mem_info': {
                 'total_memory_size': mem.get_system_total_mem_size(),
+                'free_memory_size': mem.get_system_free_mem_size(),
                 'process_memory_infos': list(mem.get_process_info_list())
             }
         }

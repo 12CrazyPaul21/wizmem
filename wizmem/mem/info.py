@@ -13,6 +13,16 @@ def get_system_total_mem_size() -> int:
     
     return psutil.virtual_memory().total
 
+def get_system_free_mem_size() -> int:
+    """
+    get system free memory size
+
+    :returns: free memory size
+    :rtype: int
+    """
+    
+    return psutil.virtual_memory().free
+
 def __map_process_info(pid: int) -> object:
     """
     encapsulate process info

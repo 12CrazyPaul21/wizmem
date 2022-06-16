@@ -37,9 +37,16 @@
         </div>
         <div id="web-manager-container" class="wizmem-hide">
             <div id="web-manager-header">
-                <h1>
+                <h1 id="web-manager-panel">
                     <button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#shutdown-dialog">关闭WizMem</button>
                 </h1>
+                <div id="wizmem-operator-btn-panel" class="btn-group">
+                    <button id="total-memory-size-btn" type="button" class="btn btn-outline-secondary text-light" disabled>total memory size : </button>
+                    <button id="merge-same-program-checkbox" type="button" class="btn btn-outline-secondary text-light">合并相同程序的进程实例</button>
+                    <button id="refresh-wizmem-status-btn" type="button" class="btn btn-outline-secondary text-light">
+                        <span id="refresh-wizmem-status-btn-spinner" class=""></span>刷新
+                    </button>
+                </div>
             </div>
             <div id="process-memory-pie-chart">
                 <canvas id="process-memory-pie-chart-canvas"></canvas>
