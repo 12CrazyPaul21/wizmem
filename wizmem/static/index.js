@@ -9,7 +9,8 @@ const wizmem = (function() {
         absolute_path: "绝对路径",
         uss_memory: "独占内存",
         kill_process: "结束进程",
-        kill_process_failed: "结束进程失败"
+        kill_process_failed: "结束进程失败",
+        open_program_folder_in_explorer: "打开程序所在目录"
     };
 
     function update_wizmem_chart() {
@@ -156,6 +157,12 @@ const wizmem = (function() {
                     onclick: function() {
                         kill_selected_process();
                     }
+                },
+                {
+                    text: I18n.open_program_folder_in_explorer,
+                    onclick: function() {
+                        open_program_folder_in_explorer();
+                    }
                 }
             ],
             menuId: "process-memory-pie-context-menu"
@@ -171,6 +178,7 @@ const wizmem = (function() {
 
         $("#process-memory-pie-chart-canvas").bind('contextmenu', function(e) {
             wizmem.env.selected_pids = null;
+            wizmem.env.selected_program = '';
 
             let hitted_points = wizmem.env.process_memory_pie_chart.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true);
             if (wizmem.env.killing_process_flag || hitted_points.length == 0 || hitted_points[0].index == 0) {
@@ -188,6 +196,8 @@ const wizmem = (function() {
                 wizmem.env.selected_pids = [process_info.pid];
                 context_options.items[0].text = `[${process_info.process_name}(${process_info.pid})]`;
             }
+
+            wizmem.env.selected_program = process_info.absolute_path;
 
             contextify_handler(e);
 
@@ -318,6 +328,22 @@ const wizmem = (function() {
         });
     }
 
+    function open_program_folder_in_explorer() {
+        $.ajax({
+            type: 'post',
+            url: '/open_program_in_explorer',
+            contentType: "application/json",
+            dataType: 'json',
+            data: JSON.stringify({
+                absolute_path: encodeURI(wizmem.env.selected_program)
+            }),
+            success: () => {
+            },
+            error: () => {
+            }
+        });
+    }
+
     return {
         env: {
             total_memory_size: 0,
@@ -326,6 +352,7 @@ const wizmem = (function() {
             process_memory_pie_chart: undefined,
             process_memory_infos_roasted: [],
             selected_pids: null,
+            selected_program: '',
             killing_process_flag: false,
             merge_same_program: false
         },

@@ -1,6 +1,7 @@
 import os, time, signal
-import psutil
+import psutil, webbrowser
 
+from urllib.parse import unquote
 from flask import Flask
 from flask import request, render_template
 
@@ -61,6 +62,30 @@ def build(app_name: str) -> Flask:
                 'free_memory_size': mem.get_system_free_mem_size(),
                 'process_memory_infos': list(mem.get_process_info_list())
             }
+        }
+
+    @app.route("/open_program_in_explorer", methods = ['POST'])
+    def open_program_in_explorer():
+        if not request.is_json:
+            return {
+                'status': False
+            }
+
+        content = request.get_json()
+        if 'absolute_path' not in content:
+            return {
+                'status': False
+            }
+
+        absolute_path = os.path.dirname(unquote(content['absolute_path']))
+
+        try:
+            webbrowser.open(absolute_path)
+        except Exception as e:
+            app.logger.error('open program in explorer(absolute_path : {}) failed'.format(absolute_path))
+
+        return {
+            'status': True
         }
 
     @app.route("/shutdown")
