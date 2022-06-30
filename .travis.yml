@@ -6,10 +6,10 @@ os:
 script:
   - pip install -r ./requirements.txt
   - . ./build_executable
-  - tar cvzf wizmem-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-$TRAVIS_TAG.tar.gz -C dist/ wizmem/
+  - tar cvzf wizmem-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}-${TRAVIS_TAG}.tar.gz -C dist/ wizmem/
 deploy:
   provider: releases
-  file: wizmem-$TRAVIS_OS_NAME-$TRAVIS_CPU_ARCH-$TRAVIS_TAG.tar.gz
+  file: wizmem-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}-${TRAVIS_TAG}.tar.gz
   skip_cleanup: true
   api_key: $GITHUB_TOKEN
   on:
