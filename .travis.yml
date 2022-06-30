@@ -1,5 +1,8 @@
 language: python
-os: windows
+os:
+  - linux
+  - osx
+  - windows
 script:
   - pip install -r ./requirements.txt
   - ./build_executable
