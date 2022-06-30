@@ -3,6 +3,7 @@ os:
   - linux
   - osx
   # - windows
+osx_image: xcode12.5
 script:
   - pip install -r ./requirements.txt
   - . ./build_executable
