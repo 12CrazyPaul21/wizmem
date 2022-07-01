@@ -12,8 +12,8 @@
 - [ ] 加入定时刷新
 - [ ] 获取程序图标
 - [x] 提供接口在资源管理器中打开程序所在文件夹
-- [ ] 给README添加Travis-CI的badge图标
-- [ ] 在CI中补充执行测试脚本
+- [x] 给README添加Travis-CI的badge图标
+- [x] 在CI中补充执行测试脚本
 - [ ] 处理没有正确停止wizmem问题
 - [ ] 加入限定wizmem进程单例
 

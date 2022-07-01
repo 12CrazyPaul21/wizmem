@@ -1,4 +1,4 @@
-# WizMem
+# WizMem [![Build Status](https://app.travis-ci.com/12CrazyPaul21/wizmem.svg?branch=master)](https://app.travis-ci.com/12CrazyPaul21/wizmem)
 
 ## 安装依赖
 
@@ -15,9 +15,7 @@ python setup.py install
 ## 打包为可执行二进制
 
 ``` bash
-# 打包到dist/wizmem目录下，需要打包为压缩包的话，请手动打包
-# 另外执行之前请手动安装pyinstaller(pip install pyinstaller)
-build_executable
+./build_executable
 ```
 
 ## 调用方法
@@ -38,3 +36,10 @@ python -c "import wizmem; wizmem.run()"
 ``` bash
 python -m wizmem.tests
 ```
+
+or
+
+```bash
+python -m unittest discover -v -s ./wizmem -p test_*.py
+```
+
