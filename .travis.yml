@@ -1,13 +1,35 @@
 language: python
-os:
-  - linux
-  - osx
-  # - windows
-osx_image: xcode12.5
+
+jobs:
+  include:
+    - name: 'Python 3.7 on Windows'
+      language: shell
+      os: windows
+      before_install:
+        - choco install python --version 3.7.0
+        - python -m pip install --upgrade pip
+      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+    - os: linux
+    - name: 'Python 3.7 on macOS'
+      os: osx
+      osx_image: xcode11.4
+      language: shell
+      before_install:
+        - python3 --version
+
+install:
+  - pip3 install -r ./requirements.txt
+
 script:
-  - pip install -r ./requirements.txt
+  - echo ${TRAVIS_OS_NAME} is this
+  - if [[ "${TRAVIS_OS_NAME}" == "windows" ]]; then
+      python -m unittest discover -v -s ./wizmem -p test_*.py;
+    else
+      python3 -m unittest discover -v -s ./wizmem -p test_*.py;
+    fi
   - . ./build_executable
   - tar cvzf wizmem-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}-${TRAVIS_TAG}.tar.gz -C dist/ wizmem/
+
 deploy:
   provider: releases
   file: wizmem-${TRAVIS_OS_NAME}-${TRAVIS_CPU_ARCH}-${TRAVIS_TAG}.tar.gz
