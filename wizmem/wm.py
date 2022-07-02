@@ -1,10 +1,7 @@
 #!/usr/bin/env python
 
 import threading, webbrowser, socket, errno, sys
-import pystray
 import urllib.request
-
-from PIL import Image
 
 from wizmem import web
 
@@ -29,6 +26,8 @@ def setup_systemtray():
     if not getattr(sys, 'frozen', False):
         icon_path = 'wizmem/%s' % icon_path
 
+    import pystray
+
     menu = pystray.Menu(
         pystray.MenuItem(
             text='Open Web Manager Site',
@@ -39,6 +38,8 @@ def setup_systemtray():
             action=lambda: urllib.request.urlopen('%s/shutdown' % WIZMEM_SERVER_URL)
         ),
     )
+
+    from PIL import Image
 
     icon = pystray.Icon('wizmem', icon=Image.open(icon_path), menu=menu)
     threading.Thread(target=lambda: icon.run(), daemon=True).start()
