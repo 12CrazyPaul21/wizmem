@@ -49,7 +49,10 @@ def run():
         webbrowser.open(WIZMEM_SERVER_URL)
         sys.exit(0)
 
-    setup_systemtray()
+    try:
+        setup_systemtray()
+    except Exception as e:
+        pass
 
     threading.Timer(1.5, lambda: webbrowser.open(WIZMEM_SERVER_URL)).start()
     web.app.build(__name__).run(port=WIZMEM_SERVER_PORT)
