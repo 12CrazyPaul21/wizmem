@@ -90,9 +90,15 @@ def build(app_name: str) -> Flask:
 
     @app.route("/shutdown")
     def shutdown():
-        os.kill(signal.CTRL_C_EVENT, 0)
+        shutdown_func = request.environ.get('werkzeug.server.shutdown')
+
+        if shutdown_func:
+            shutdown_func()
+        else:
+            os.kill(os.getpid(), signal.SIGINT)
+
         return {
-            'result': True
+            'result': True,
         }
 
     return app
